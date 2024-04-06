@@ -9,8 +9,6 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-
-//below is the section of stack data structure
 struct Stack {
     int data[MAX_SIZE];
     int top;
@@ -19,6 +17,9 @@ struct Node{
     int data;
     struct Node *next;
 };
+
+//below is the section of stack with array data structure
+
 void initialize_stack(struct Stack *stack){
     stack->top = -1;
 }
@@ -101,4 +102,46 @@ void deleteNode(struct Node **head,int key){
 
 }
 
+//below is the section of stack with link list data structure
+struct stackNode{
+    int data;
+    struct stackNode *next;
+};
+struct Stack_LL{
+    struct stackNode *top;
+};
+void initializeStack_LL(struct Stack_LL *stack){
+    stack->top = NULL;
+}
+int stackIsEmpty_LL(struct Stack_LL *stack){
+    return (stack->top==NULL);
+}
+void pushStack_LL(struct Stack_LL *stack,int data){
+    struct stackNode *newNode = (struct stackNode*)malloc(sizeof(struct stackNode));
+    if(newNode == NULL){
+        printf("Malloc failed");
+        exit(1);
+    }
+    newNode->data = data;
+    newNode->next = stack->top;
+    stack->top = newNode;
+}
+int popStack_LL(struct Stack_LL *stack){
+    if(stackIsEmpty_LL(stack)){
+        printf("Stack underflow error");
+        exit(1);
+    }else{
+        struct stackNode *tmp = stack->top;
+        int data = tmp->data;
+        stack->top = tmp->next;
+        free(tmp);
+        return data;
+    }
+}
+void peakStack_LL(struct Stack_LL *stack){
+    while(stack->top->data != NULL){
+        printf("stack LL data : %d\n",stack->top->data);
+        stack->top = stack->top->next;
+    }
+}
 #endif //DATASTRUCTURE_DATA_STRUCTURES_H
