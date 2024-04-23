@@ -9,16 +9,12 @@
 #include "stdio.h"
 #include "stdlib.h"
 
+//below is the section of stack with array data structure
+
 struct Stack {
     int data[MAX_SIZE];
     int top;
 };
-struct Node{
-    int data;
-    struct Node *next;
-};
-
-//below is the section of stack with array data structure
 
 void initialize_stack(struct Stack *stack){
     stack->top = -1;
@@ -65,6 +61,12 @@ void show_stack_data(struct Stack *stack){
 }
 
 //below is the section of link list data structure
+
+struct Node{
+    int data;
+    struct Node *next;
+};
+
 struct Node *createNode(int data){
     struct Node *newNode = malloc(sizeof (struct Node));
     newNode->data = data;
@@ -114,7 +116,8 @@ void initializeStack_LL(struct Stack_LL *stack){
     stack->top = NULL;
 }
 int stackIsEmpty_LL(struct Stack_LL *stack){
-    return (stack->top==NULL);
+    if(stack->top==NULL) return 1;
+    return 0;
 }
 void pushStack_LL(struct Stack_LL *stack,int data){
     struct stackNode *newNode = (struct stackNode*)malloc(sizeof(struct stackNode));
@@ -128,6 +131,7 @@ void pushStack_LL(struct Stack_LL *stack,int data){
 }
 int popStack_LL(struct Stack_LL *stack){
     if(stackIsEmpty_LL(stack)){
+        printf("%d\n",stack->top->data);
         printf("Stack underflow error");
         exit(1);
     }else{
@@ -139,9 +143,114 @@ int popStack_LL(struct Stack_LL *stack){
     }
 }
 void peakStack_LL(struct Stack_LL *stack){
-    while(stack->top->data != NULL){
+    while(stack->top != NULL){
         printf("stack LL data : %d\n",stack->top->data);
         stack->top = stack->top->next;
+    }
+}
+
+//below is the section of queue with array data structure
+
+int Queue[MAX_SIZE];
+
+int front = -1;
+int rear = -1;
+
+int isQueueEmpty(){
+    if(rear == -1 ) return 1;
+    return 0;
+}
+int isQueueFull(){
+    if(rear == MAX_SIZE - 1) return 1;
+    return 0;
+}
+void arrayEnqueue(int data){
+    if(isQueueFull()){
+        printf("Queue is already full");
+        exit(1);
+    }else{
+        if(front == -1) front = 0;
+        rear ++;
+        if(rear == 0){
+            Queue[rear] = data;
+        }else{
+            for(int i = rear;i>=0;i--){
+                Queue[i+1] = Queue[i];
+            }
+            Queue[0] = data;
+        }
+
+    }
+}
+
+int arrayDequeue(){
+    if(isQueueEmpty()){
+        printf("There is nothing to Dequeue");
+        exit(1);
+    }else{
+        int firstNumber = Queue[front];
+        if(rear == 0){
+            rear = -1;
+            front = -1;
+        }else{
+            for(int i = 0 ;i<rear;i++){
+                Queue[i] = Queue[i+1];
+            }
+            rear --;
+        }
+        return firstNumber;
+    }
+}
+
+void arrayQueuePeek(){
+    if(isQueueEmpty()) printf("There is nothing inside the Queue data structure!");
+    for(int i=0;i<= rear;i++){
+        printf("Queue no - %d : %d\n",i,Queue[i]);
+    }
+}
+
+//below is the section of queue with link list data structure
+
+struct QueueNode{
+    int data;
+    struct QueueNode *next;
+};
+
+struct QueueNode *createQueueNode(int data){
+    struct QueueNode *newQueueNode = malloc(sizeof (struct QueueNode));
+    newQueueNode->data = data;
+    newQueueNode->next = NULL;
+    return newQueueNode;
+}
+int isQueueEmpty_LL(struct QueueNode *head){
+    if(head == NULL) return 1;
+    return 0;
+}
+void Enqueue_LL(struct QueueNode **head,int newData){
+    struct QueueNode *newNode = createQueueNode(newData);
+    newNode->next = *head;
+    *head = newNode;
+}
+int Dequeue_LL(struct QueueNode **head){
+    if(isQueueEmpty_LL(*head)){
+        printf("There is nothing inside Queue");
+        exit(1);
+    }
+    struct QueueNode* firstQueueNode = *head;
+    int firstData = firstQueueNode->data;
+    struct QueueNode* secondQueueNode = firstQueueNode->next;
+    *head = secondQueueNode;
+    free(firstQueueNode);
+    return firstData;
+}
+void peekQueue_LL(struct QueueNode *head){
+    if(head == NULL){
+        printf("The queue is empty");
+        exit(1);
+    }
+    while(head != NULL){
+        printf("Data : %d\n",head->data);
+        head = head->next;
     }
 }
 #endif //DATASTRUCTURE_DATA_STRUCTURES_H
